@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const s3Routes = require("./routes/s3Routes");
 
 const app = express();
 app.use(cors());
@@ -10,8 +11,8 @@ app.use(express.json());
 
 const pool = mysql.createPool({
   host: "localhost",
-  user: "admin",
-  password: "admin7088",
+  user: "root",
+  password: "70887088",
   database: "StudentFeedback",
 });
 
@@ -169,6 +170,8 @@ app.get("/admin/complaints/stats", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+app.use("/s3", s3Routes);
 
 app.listen(3000, () => {
   console.log("Server running at http://<EC2 Instance IP>:3000");

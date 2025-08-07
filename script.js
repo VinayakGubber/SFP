@@ -326,30 +326,37 @@ async function updateTotalComplaintCount() {
 }
 
 // CSV file export
-function exportToCSV() {
+
+async function exportToCSV() {
   const table = document.getElementById("complaintsTable");
   const rows = Array.from(table.querySelectorAll("tr"));
 
-  // Convert table rows to CSV format
   const csv = rows
     .map((row) => {
       const cells = Array.from(row.querySelectorAll("th, td"));
-      // Skip the last cell if it's the Actions column (8th column)
       return cells
-        .slice(0, -1) // remove .slice(0, -1) if you want to include "Actions"
+        .slice(0, -1) // adjust if needed: excludes 'Actions' col
         .map((cell) => `"${cell.innerText.trim()}"`)
         .join(",");
     })
     .join("\n");
 
-  // Create blob and download
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
+  try {
+    // Get pre-signed S3 upload URL from backend
+    const res = await fetch("http://localhost:3000/s3/generate-upload-url");
+    if (!res.ok) throw new Error("Failed to get upload URL");
+    const { uploadUrl, fileName } = await res.json();
 
-  const link = document.createElement("a");
-  link.setAttribute("href", url);
-  link.setAttribute("download", "complaints_data.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    // Upload CSV blob to S3
+    const putRes = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "text/csv" },
+      body: new Blob([csv], { type: "text/csv" }),
+    });
+
+    if (!putRes.ok) throw new Error("CSV upload failed");
+    alert(`CSV uploaded successfully as ${fileName} in your S3 bucket!`);
+  } catch (err) {
+    alert("Error uploading CSV: " + err.message);
+  }
 }
