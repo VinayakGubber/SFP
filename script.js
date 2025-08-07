@@ -1,3 +1,12 @@
+//To replace all the IP's together use the following commmand
+
+/*
+
+sed -i 's/<EC2 Instance IP>>/<The public IP you just got>/g'  script.js
+
+
+*/
+
 document.addEventListener("DOMContentLoaded", () => {
   const isStudentPage = document.getElementById("studentLoginView") !== null;
   const isAdminPage = document.getElementById("adminLoginView") !== null;
@@ -19,7 +28,7 @@ studentLoginForm.addEventListener("submit", async (e) => {
     return alert("Enter both roll number and password");
 
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/login", {
+    const res = await fetch("http://localhost:3000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rollNumber, password }),
@@ -68,7 +77,7 @@ complaintForm.addEventListener("submit", async (e) => {
   };
 
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/complaints", {
+    const res = await fetch("http://localhost:3000/complaints", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(complaint),
@@ -92,9 +101,7 @@ async function loadStudentComplaints(rollNumber) {
   tbody.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
 
   try {
-    const res = await fetch(
-      `http://<EC2 Instance IP>:3000/complaints/${rollNumber}`
-    );
+    const res = await fetch(`http://localhost:3000/complaints/${rollNumber}`);
     const data = await res.json();
 
     tbody.innerHTML = "";
@@ -201,7 +208,7 @@ async function renderAdminComplaints() {
   tbody.innerHTML = "<tr><td colspan='8'>Loading...</td></tr>";
 
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/admin/complaints");
+    const res = await fetch("http://localhost:3000/admin/complaints");
     const all = await res.json();
 
     let list = all;
@@ -265,7 +272,7 @@ async function renderAdminComplaints() {
 async function updateComplaintStatus(id, status) {
   try {
     const res = await fetch(
-      `http://<EC2 Instance IP>:3000/admin/complaints/${id}/status`,
+      `http://localhost:3000/admin/complaints/${id}/status`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -288,7 +295,7 @@ async function deleteComplaint(id) {
   if (!confirm("Are you sure you want to delete this complaint?")) return;
 
   try {
-    const res = await fetch(`http://<EC2 Instance IP>:3000/admin/complaints/${id}`, {
+    const res = await fetch(`http://localhost:3000/admin/complaints/${id}`, {
       method: "DELETE",
     });
 
@@ -305,7 +312,7 @@ async function deleteComplaint(id) {
 
 async function updateTotalComplaintCount() {
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/admin/complaints/stats");
+    const res = await fetch("http://localhost:3000/admin/complaints/stats");
     const data = await res.json();
 
     document.getElementById("totalCount").textContent = data.total || 0;

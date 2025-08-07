@@ -571,16 +571,22 @@
         });
 
       // Student logout functionality
-      document
-        .getElementById("studentLogout")
-        .addEventListener("click", (e) => {
-          e.preventDefault();
-          localStorage.removeItem("student");
-          document.getElementById("studentComplaintView").style.display =
-            "none";
-          document.getElementById("studentLoginView").classList.add("active");
-          document.getElementById("studentLoginView").style.display = "block";
-        });
+      // document
+      //   .getElementById("studentLogout")
+      //   .addEventListener("click", (e) => {
+      //     e.preventDefault();
+      //     localStorage.removeItem("student");
+      //     document.getElementById("studentComplaintView").style.display =
+      //       "none";
+      //     document.getElementById("studentLoginView").classList.add("active");
+      //     document.getElementById("studentLoginView").style.display = "block";
+      //     window.location.href = "index.html";
+      //   });
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        sessionStorage.removeItem("studentLoggedIn");
+        location.reload();
+      });
 
       // Setup function to determine which page logic to load
       function setupStudentLogic() {
