@@ -2,7 +2,7 @@
 
 /*
 
-sed -i 's/<EC2 Instance IP>>/<The public IP you just got>/g'  script.js
+sed -i 's/<EC2 Instance IP>/<The public IP you just got>/g'  script.js
 
 
 */
@@ -360,3 +360,4 @@ async function exportToCSV() {
     alert("Error uploading CSV: " + err.message);
   }
 }
+
