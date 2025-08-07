@@ -1,0 +1,134 @@
+//------------------------------------------------------------//
+
+/*
+
+RDS QUERY    -- Create database 
+CREATE DATABASE IF NOT EXISTS StudentFeedback;
+
+-- Use the database
+USE StudentFeedback;
+
+-- Drop tables if they already exist (for clean setup)
+DROP TABLE IF EXISTS complaints;
+DROP TABLE IF EXISTS users;
+
+-- Create users table
+CREATE TABLE users (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    roll_number VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role ENUM('student', 'admin') DEFAULT 'student',
+    email VARCHAR(100) DEFAULT 'example@example.com',
+    mobile VARCHAR(15) DEFAULT '0000000000'
+);
+
+-- Insert users
+INSERT INTO users (name, roll_number, password, role, email, mobile)
+VALUES
+    ('Rohit', '2222', '2222', 'student', 'rohit@gmail.com', '8962367313');
+
+INSERT INTO users (name, roll_number, password, role, email, mobile)
+VALUES
+    ('Vinayak', '1111', '1111', 'student', 'vinayak@gmail.com', '8277305907');
+
+-- Create complaints table
+CREATE TABLE complaints (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    roll_no VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    mobile VARCHAR(15) NOT NULL,
+    category ENUM('Academics','Facilities','Hostel','Transport','Others') NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('Pending','In Progress','Resolved') DEFAULT 'Pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert dummy complaints
+INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
+VALUES
+    ('Vinayak Gubber', '1111', 'vinayak@gmail.com', '8277305907', 'Academics', 'Issue with lab cleanliness.', 'Pending');
+
+INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
+VALUES
+    ('Rohit Doddamani', '2222', 'rohit@gmail.com', '9123456780', 'Hostel', 'WiFi not working properly.', 'In Progress');
+
+select * from users;
+select * from complaints;
+
+*/
+
+//------------------------------------------------------------//
+
+//------------------------------------------------------------//
+//For EC2 Instance
+/*
+
+do apt update
+sudo apt install nodejs npm -y
+sudo apt install mysql-client -y
+sudo apt install apache2 -y
+sudo systemctl enable apache2
+sudo systemctl start apache2
+git clone https://github.com/VinayakGubber/SFP.git
+cd /var/www/html
+cd SFP
+npm install
+npm install aws-sdk
+
+*/
+
+//------------------------------------------------------------//
+
+//------------------------------------------------------------//
+//S3 Bucket Policy
+/*
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::cc-s3-bucket-43/*"
+        }
+    ]
+}
+
+*/
+
+//------------------------------------------------------------//
+
+//------------------------------------------------------------//
+//S3 CORS policy
+/*
+
+
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [
+            "ETag"
+        ],
+        "MaxAgeSeconds": 3000
+    }
+]
+
+*/
+
+//------------------------------------------------------------//
