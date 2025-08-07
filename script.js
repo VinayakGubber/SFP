@@ -2,7 +2,7 @@
 
 /*
 
-sed -i 's/<EC2 Instance IP>/<The public IP you just got>/g'  script.js
+sed -i 's/<EC2 Instance IP>/<EC2 Instance IP>/g'  script.js
 
 
 */
@@ -101,7 +101,9 @@ async function loadStudentComplaints(rollNumber) {
   tbody.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
 
   try {
-    const res = await fetch(`http://<EC2 Instance IP>:3000/complaints/${rollNumber}`);
+    const res = await fetch(
+      `http://<EC2 Instance IP>:3000/complaints/${rollNumber}`
+    );
     const data = await res.json();
 
     tbody.innerHTML = "";
@@ -295,9 +297,12 @@ async function deleteComplaint(id) {
   if (!confirm("Are you sure you want to delete this complaint?")) return;
 
   try {
-    const res = await fetch(`http://<EC2 Instance IP>:3000/admin/complaints/${id}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `http://<EC2 Instance IP>:3000/admin/complaints/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
@@ -360,4 +365,3 @@ async function exportToCSV() {
     alert("Error uploading CSV: " + err.message);
   }
 }
-

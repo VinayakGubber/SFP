@@ -7,12 +7,25 @@ const router = express.Router();
 /*
 
 [
-  {
-    "AllowedHeaders": ["*"],
-    "AllowedMethods": ["PUT", "POST"],
-    "AllowedOrigins": ["*"],
-    "ExposeHeaders": []
-  }
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [
+            "ETag"
+        ],
+        "MaxAgeSeconds": 3000
+    }
 ]
 
 
@@ -23,7 +36,7 @@ const router = express.Router();
 const AWS_ACCESS_KEY_ID = "YOUR_AWS_ACCESS_KEY_ID";
 const AWS_SECRET_ACCESS_KEY = "YOUR_AWS_SECRET_ACCESS_KEY";
 const AWS_REGION = "ap-south-1"; // or your real region, e.g. us-east-1
-const S3_BUCKET = "your-s3-bucket-name";
+const S3_BUCKET = "cc-s3-bucket-43";
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 AWS.config.update({
