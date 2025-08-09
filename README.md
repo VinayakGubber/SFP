@@ -1,5 +1,3 @@
----
-
 # Student Feedback Portal – AWS Hosted Web Application
 
 ## Purpose and Intent
