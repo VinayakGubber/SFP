@@ -1,21 +1,27 @@
-# Student Feedback Portal - AWS Hosted Web Application
+---
+
+# Student Feedback Portal – AWS Hosted Web Application
 
 ## Purpose and Intent
 
-This project demonstrates how web applications can be hosted on cloud service providers like AWS by leveraging various AWS resources and integrating them into a complete working solution. It showcases key learnings in cloud architecture, security, and application deployment on AWS.
+This project demonstrates how a web application can be hosted on a cloud platform like AWS by leveraging various AWS services and integrating them into a complete, working solution. It highlights key concepts in **cloud architecture**, **security**, and **application deployment**.
 
-**Note:** This project was built within a short timeframe specifically to illustrate cloud hosting and integration concepts. Please evaluate it based on its architectural demonstration rather than feature completeness.
+> **Note:** This project was created in a short timeframe to illustrate AWS hosting and integration concepts. Please evaluate it for its architectural demonstration rather than its feature completeness.
+
+---
 
 ## Project Overview
 
-The Student Feedback Portal is a multi-tier web application hosted on AWS, consisting of:
+The **Student Feedback Portal** is a multi-tier web application hosted entirely on AWS. Its architecture includes:
 
-- **Custom VPC** with public and private subnets for resource segregation
-- **RDS MySQL instance** hosted on private subnets with restricted access
-- **EC2 Ubuntu instance** running Apache, Node.js backend, and MySQL client
-- **S3 bucket** for hosting frontend static files and storing exported CSV files
-- **Security groups** controlling access to EC2 and RDS instances
-- **Internet Gateway and route tables** configured for secure public and private communication
+* **Custom VPC** with public and private subnets for resource segregation
+* **RDS MySQL instance** in private subnets with restricted access
+* **EC2 Ubuntu instance** running Apache, Node.js backend, and MySQL client
+* **S3 bucket** hosting static frontend files and storing exported CSV reports
+* **Security groups** controlling inbound/outbound access
+* **Internet Gateway** and route tables enabling secure public/private connectivity
+
+---
 
 ## Architecture
 
@@ -25,67 +31,72 @@ Internet → Internet Gateway → Public Subnet (EC2) → Private Subnet (RDS)
             S3 Bucket (Static Frontend + CSV Storage)
 ```
 
+---
+
 ## AWS Setup Instructions
 
 ### 1. Create Custom VPC
 
-- **VPC Name:** SimpleFeedbackVPC
-- **CIDR Block:** 10.0.0.0/16
-- **Tenancy:** Default
+* **Name:** `SimpleFeedbackVPC`
+* **CIDR Block:** `10.0.0.0/16`
+* **Tenancy:** Default
 
 ### 2. Create Subnets
 
-- **PublicSubnet1:** 10.0.1.0/24 (for EC2)
-- **PrivateSubnet1:** 10.0.2.0/24 (for RDS)
-- **PrivateSubnet2:** 10.0.3.0/24 (reserved/optional)
-- **Availability Zone:** ap-south-1a
+* **PublicSubnet1:** `10.0.1.0/24` – for EC2
+* **PrivateSubnet1:** `10.0.2.0/24` – for RDS
+* **PrivateSubnet2:** `10.0.3.0/24` – reserved/optional
+* **Availability Zone:** `ap-south-1a`
 
-### 3. Create and Attach Internet Gateway
+### 3. Internet Gateway
 
-- **Name:** SimpleIGW
-- **Attach to:** SimpleFeedbackVPC
+* **Name:** `SimpleIGW`
+* Attach to **SimpleFeedbackVPC**
 
-### 4. Configure Route Tables
+### 4. Route Tables
 
-- **Public Route Table:** 0.0.0.0/0 → SimpleIGW
-  - Associate with PublicSubnet1
-- **Private Route Table:** For PrivateSubnet1 and PrivateSubnet2 (no IGW route)
+* **Public Route Table:** Route `0.0.0.0/0` → SimpleIGW
 
-### 5. Create Security Groups
+  * Associate with **PublicSubnet1**
+* **Private Route Table:** For **PrivateSubnet1** and **PrivateSubnet2** (no IGW route)
 
-**SimpleEC2-SG** with inbound rules:
-- SSH (port 22) from Your IP only
-- HTTP (port 80) from anywhere (0.0.0.0/0)
-- Custom TCP (port 3000) from anywhere for Node.js app
+### 5. Security Groups
 
-**SimpleRDS-SG** allowing:
-- MySQL (port 3306) access only from SimpleEC2-SG
+**SimpleEC2-SG**
 
-### 6. Create RDS MySQL Instance
+* SSH (22) – from **your IP only**
+* HTTP (80) – from anywhere (0.0.0.0/0)
+* TCP (3000) – from anywhere for Node.js
 
-- **Engine:** MySQL
-- **DB Instance Identifier:** studentfeedback-db
-- **Master username/password:** your choice
-- **Instance size:** db.t3.micro (Free Tier eligible)
-- **Storage:** 20GB SSD (General Purpose)
-- **Subnet:** PrivateSubnet1 (and optionally PrivateSubnet2)
-- **Public access:** Disabled
-- **Security group:** SimpleRDS-SG
+**SimpleRDS-SG**
 
-### 7. Launch EC2 Instance
+* MySQL (3306) – only from **SimpleEC2-SG**
 
-- **AMI:** Ubuntu 22.04 LTS
-- **Instance type:** t2.micro (Free Tier eligible)
-- **Network:** SimpleFeedbackVPC, Subnet: PublicSubnet1
-- **Auto-assign Public IP:** Enabled
-- **Security Group:** SimpleEC2-SG
-- **Key Pair:** Use existing or create new SSH key pair (.pem)
+### 6. RDS MySQL Instance
+
+* **Engine:** MySQL
+* **Identifier:** `studentfeedback-db`
+* **Master credentials:** Your choice
+* **Instance size:** `db.t3.micro` (Free Tier)
+* **Storage:** 20GB SSD (GP2)
+* **Subnet:** PrivateSubnet1 (+ optionally PrivateSubnet2)
+* **Public Access:** Disabled
+* **Security Group:** SimpleRDS-SG
+
+### 7. EC2 Instance
+
+* **AMI:** Ubuntu 22.04 LTS
+* **Type:** `t2.micro` (Free Tier)
+* **Network:** SimpleFeedbackVPC → PublicSubnet1
+* **Public IP:** Enabled
+* **Security Group:** SimpleEC2-SG
+* **Key Pair:** Existing or new `.pem` file
+
+---
 
 ## EC2 Setup & Backend Configuration
 
-### 1. Initial Setup
-
-SSH into your EC2 instance and update the system:
+### 1. Install Packages
 
 ```bash
 sudo apt update
@@ -94,16 +105,17 @@ sudo systemctl enable apache2
 sudo systemctl start apache2
 ```
 
-### 2. Verify Apache Installation
+### 2. Verify Apache
 
 ```bash
 cd /var/www/html
 ls
 ```
 
-Visit `http://<EC2-public-IP>/` to confirm Apache is running.
+Visit:
+`http://<EC2-Public-IP>/` → Should display Apache test page.
 
-### 3. Clone and Setup Project
+### 3. Clone Project & Install Dependencies
 
 ```bash
 git clone https://github.com/your-repo/StudentFeedbackPortal.git
@@ -112,9 +124,7 @@ npm install
 npm install aws-sdk
 ```
 
-### 4. Configure AWS Credentials
-
-Edit `routes/s3Routes.js`:
+### 4. Configure AWS Credentials (`routes/s3Routes.js`)
 
 ```javascript
 const AWS_ACCESS_KEY_ID = "YOUR_AWS_ACCESS_KEY_ID";
@@ -123,39 +133,36 @@ const AWS_REGION = "ap-south-1";
 const S3_BUCKET = "cc-s3-bucket-43";
 ```
 
-### 5. Configure RDS Connection
-
-Update your backend server configuration (e.g., in `server.js`):
+### 5. Configure RDS Connection (`server.js`)
 
 ```javascript
 const pool = mysql.createPool({
-  host: "<your-rds-endpoint>",        // e.g., studentfeedback-db.xxxxxxxx.ap-south-1.rds.amazonaws.com
-  user: "<your-db-username>",         // e.g., admin
-  password: "<your-db-password>",     // your DB password
+  host: "<RDS-endpoint>",
+  user: "<DB-username>",
+  password: "<DB-password>",
   database: "StudentFeedback",
 });
 ```
 
+---
+
 ## Database Setup
 
-Connect to your RDS instance from EC2:
+Connect from EC2 to RDS:
 
 ```bash
-mysql -h <RDS-endpoint> -u <Username> -p
+mysql -h <RDS-endpoint> -u <username> -p
 ```
 
-Execute the following SQL to create the database schema and sample data:
+Create schema and insert sample data:
 
 ```sql
--- Create database
 CREATE DATABASE IF NOT EXISTS StudentFeedback;
 USE StudentFeedback;
 
--- Drop existing tables (clean setup)
 DROP TABLE IF EXISTS complaints;
 DROP TABLE IF EXISTS users;
 
--- Create users table
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -166,13 +173,10 @@ CREATE TABLE users (
     mobile VARCHAR(15) DEFAULT '0000000000'
 );
 
--- Insert sample users
-INSERT INTO users (name, roll_number, password, role, email, mobile)
-VALUES
-    ('Student One', 'STU001', 'password123', 'student', 'student1@example.com', '9999999999'),
-    ('Student Two', 'STU002', 'password456', 'student', 'student2@example.com', '8888888888');
+INSERT INTO users (name, roll_number, password, role, email, mobile) VALUES
+('Student One', 'STU001', 'password123', 'student', 'student1@example.com', '9999999999'),
+('Student Two', 'STU002', 'password456', 'student', 'student2@example.com', '8888888888');
 
--- Create complaints table
 CREATE TABLE complaints (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -185,88 +189,124 @@ CREATE TABLE complaints (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert sample complaints
-INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
-VALUES
-    ('Student One', 'STU001', 'student1@example.com', '9999999999', 'Academics', 'Need access to lecture materials.', 'Pending'),
-    ('Student Two', 'STU002', 'student2@example.com', '8888888888', 'Hostel', 'Leaky faucet in room.', 'In Progress');
+INSERT INTO complaints (name, roll_no, email, mobile, category, message, status) VALUES
+('Student One', 'STU001', 'student1@example.com', '9999999999', 'Academics', 'Need access to lecture materials.', 'Pending'),
+('Student Two', 'STU002', 'student2@example.com', '8888888888', 'Hostel', 'Leaky faucet in room.', 'In Progress');
 ```
+
+---
 
 ## Frontend Setup (S3 Hosting)
 
-1. **Create S3 bucket** named `student-feedback-simple`
-2. **Enable static website hosting** on the bucket
-3. **Update API endpoints** in your frontend files (e.g., `script.js`):
-   ```javascript
-   fetch('http://<EC2-Public-IP>:3000/login')
-   ```
-4. **Upload frontend files** to the S3 bucket
-5. **Set bucket policy** to make content publicly accessible
+1. Create S3 bucket: **student-feedback-simple**
+2. Enable **Static Website Hosting**
+3. Update API endpoints in frontend (`script.js`):
+
+```javascript
+fetch('http://<EC2-Public-IP>:3000/login')
+```
+
+4. Upload frontend files to the bucket
+5. Apply a **bucket policy** for public read access
+
+---
 
 ## Starting the Application
 
-Start the backend Node.js server on EC2:
+On EC2:
 
 ```bash
 cd StudentFeedbackPortal/server
 node server.js
 ```
 
-## Final Verification
+---
 
-1. Access the S3 static website URL in your browser
-2. Test login functionality with sample credentials
-3. Test feedback submission
-4. Verify CSV export feature uploads files to S3 bucket
+## Final Verification Checklist
 
-## Troubleshooting
-
-### Common Issues
-
-- **API calls failing:** Verify security groups allow traffic on required ports
-- **Database connection issues:** Check RDS security group allows MySQL access from EC2 security group
-- **Frontend not loading:** Ensure S3 bucket policy allows public read access
-- **EC2 not accessible:** Verify public subnet configuration and Internet Gateway routing
-
-### Key Checkpoints
-
-- ✅ EC2 instance has public IP and is in public subnet
-- ✅ RDS instance is in private subnet without public access
-- ✅ Security groups properly configured
-- ✅ Route tables and Network ACLs allow required traffic
-- ✅ Backend server is running on EC2
-- ✅ Frontend is accessible via S3 static website hosting
-
-## Expected Output
-
-After successful deployment:
-
-- **Apache server** running at `http://<EC2-public-IP>/`
-- **Frontend application** hosted on S3 with working login functionality
-- **Backend API** on EC2 handling authentication and data operations
-- **Database** storing user data and feedback submissions
-- **CSV exports** automatically uploaded to configured S3 bucket
-- **Complete multi-tier architecture** demonstrating AWS service integration
-
-## Technologies Used
-
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express.js
-- **Database:** MySQL (AWS RDS)
-- **Cloud Services:** AWS EC2, RDS, S3, VPC
-- **Web Server:** Apache HTTP Server
-
-## Learning Outcomes
-
-This project demonstrates:
-- AWS VPC configuration and network security
-- Multi-tier application architecture on AWS
-- Integration between AWS services (EC2, RDS, S3)
-- Database design and management
-- RESTful API development
-- Static website hosting on S3
-- Cloud security best practices
+✅ EC2 has public IP in public subnet
+✅ RDS is in private subnet with no public access
+✅ Security groups allow necessary inbound/outbound traffic
+✅ Route tables and ACLs configured correctly
+✅ Backend server running on EC2
+✅ Frontend loads via S3 static hosting
 
 ---
 
-**Disclaimer:** This project was developed for educational purposes to demonstrate AWS cloud hosting concepts. Please evaluate based on architectural implementation rather than feature completeness.
+## Additional Feature – Feedback Marshal IAM Role & S3 Bucket Policy
+
+The **Feedback Marshal** role demonstrates AWS **role-based access control** with **least privilege** principles.
+
+**Role Purpose:**
+Read-only access to feedback CSV files stored in the S3 bucket, without the ability to modify or delete.
+
+**Policy:**
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::student-feedback-simple",
+        "arn:aws:s3:::student-feedback-simple/*"
+      ]
+    }
+  ]
+}
+```
+
+**Implementation Steps:**
+
+1. Create IAM group **FeedbackMarshal**
+2. Attach policy above to the group
+3. Add IAM users to the group
+4. Ensure bucket permissions align with this policy
+5. Demonstrate read-only behavior:
+
+   * ✅ List & download files
+   * ❌ Upload/delete attempts return “Access Denied”
+
+---
+
+## Expected Output
+
+* Apache server running at `http://<EC2-public-IP>/`
+* Frontend accessible via S3 static site URL
+* Backend API handling auth & data operations
+* MySQL database storing user data & feedback
+* CSV exports uploaded to S3 bucket automatically
+* Fully functional **multi-tier AWS architecture**
+
+---
+
+## Technologies Used
+
+* **Frontend:** HTML, CSS, JavaScript
+* **Backend:** Node.js, Express.js
+* **Database:** MySQL (AWS RDS)
+* **Cloud Services:** AWS EC2, RDS, S3, VPC
+* **Web Server:** Apache HTTP Server
+
+---
+
+## Learning Outcomes
+
+* VPC configuration & AWS network security
+* Multi-tier application design & deployment on AWS
+* Service integration (EC2 ↔ RDS ↔ S3)
+* Database schema design & operations
+* REST API development
+* Static site hosting with S3
+* IAM-based security & least privilege principles
+
+---
+
+**Disclaimer:** Built for educational purposes to demonstrate AWS hosting concepts — functionality is secondary to architecture.
+
+---
