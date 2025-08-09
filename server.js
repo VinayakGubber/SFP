@@ -10,7 +10,7 @@ app.use(express.json());
 //----------------------------------------------------------Put your RDS credentials here----------------------------------------------------------------//
 
 const pool = mysql.createPool({
-  host: "localhost",
+  host: "localhost", //RDS End point
   user: "admin",
   password: "admin7088",
   database: "StudentFeedback",
