@@ -1,65 +1,11 @@
-//------------------------------------------------------------//
+Changes to be made in the following files 
 
-/*
+-(In the EC2 instance)
+/server.js
+/routes/s3Routes.js
 
-RDS QUERY    -- Create database 
-CREATE DATABASE IF NOT EXISTS StudentFeedback;
-
--- Use the database
-USE StudentFeedback;
-
--- Drop tables if they already exist (for clean setup)
-DROP TABLE IF EXISTS complaints;
-DROP TABLE IF EXISTS users;
-
--- Create users table
-CREATE TABLE users (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    roll_number VARCHAR(20) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
-    role ENUM('student', 'admin') DEFAULT 'student',
-    email VARCHAR(100) DEFAULT 'example@example.com',
-    mobile VARCHAR(15) DEFAULT '0000000000'
-);
-
--- Insert users
-INSERT INTO users (name, roll_number, password, role, email, mobile)
-VALUES
-    ('Rohit', '2222', '2222', 'student', 'rohit@gmail.com', '8962367313');
-
-INSERT INTO users (name, roll_number, password, role, email, mobile)
-VALUES
-    ('Vinayak', '1111', '1111', 'student', 'vinayak@gmail.com', '8277305907');
-
--- Create complaints table
-CREATE TABLE complaints (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    roll_no VARCHAR(20) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    mobile VARCHAR(15) NOT NULL,
-    category ENUM('Academics','Facilities','Hostel','Transport','Others') NOT NULL,
-    message TEXT NOT NULL,
-    status ENUM('Pending','In Progress','Resolved') DEFAULT 'Pending',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Insert dummy complaints
-INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
-VALUES
-    ('Vinayak Gubber', '1111', 'vinayak@gmail.com', '8277305907', 'Academics', 'Issue with lab cleanliness.', 'Pending');
-
-INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
-VALUES
-    ('Rohit Doddamani', '2222', 'rohit@gmail.com', '9123456780', 'Hostel', 'WiFi not working properly.', 'In Progress');
-
-select * from users;
-select * from complaints;
-
-*/
-
-//------------------------------------------------------------//
+-(In the local machine and then uploaded onto the s3 bucket)
+/script.js
 
 //------------------------------------------------------------//
 //For EC2 Instance
@@ -131,4 +77,63 @@ npm install aws-sdk
 
 */
 
+//------------------------------------------------------------//
+
+//------------------------------------------------------------//
+
+-- Create database 
+CREATE DATABASE IF NOT EXISTS StudentFeedback;
+
+-- Use the database
+USE StudentFeedback;
+
+-- Drop tables if they already exist (for clean setup)
+DROP TABLE IF EXISTS complaints;
+DROP TABLE IF EXISTS users;
+
+-- Create users table
+CREATE TABLE users (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    roll_number VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role ENUM('student', 'admin') DEFAULT 'student',
+    email VARCHAR(100) DEFAULT 'example@example.com',
+    mobile VARCHAR(15) DEFAULT '0000000000'
+);
+
+-- Insert users 
+INSERT INTO users (name, roll_number, password, role, email, mobile)
+VALUES
+    ('Karan Verma',    '1111', '1111', 'student', 'karan.verma@example.com', '9012345678'),
+    ('Priya Nair',     '2222', '2222', 'student', 'priya.nair@example.com',  '9023456789'),
+    ('Sahil Bhatia',   '3333', '3333', 'admin',   'sahil.bhatia@example.com', '9034567890');
+
+-- Create complaints table
+CREATE TABLE complaints (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    roll_no VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    mobile VARCHAR(15) NOT NULL,
+    category ENUM('Academics','Facilities','Hostel','Transport','Others') NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('Pending','In Progress','Resolved') DEFAULT 'Pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert dummy complaints (5 total)
+INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
+VALUES
+    ('Karan Verma', '1111', 'karan.verma@example.com', '9012345678', 'Academics', 'Need more practice sessions for coding.', 'Pending'),
+    ('Priya Nair',  '2222', 'priya.nair@example.com',  '9023456789', 'Hostel', 'Broken window in hostel room.', 'In Progress'),
+    ('Karan Verma', '1111', 'karan.verma@example.com', '9012345678', 'Facilities', 'Printer in library not working.', 'Resolved'),
+    ('Sahil Bhatia','3333', 'sahil.bhatia@example.com','9034567890', 'Transport', 'College bus timing needs adjustment.', 'Pending'),
+    ('Priya Nair',  '2222', 'priya.nair@example.com',  '9023456789', 'Others', 'Request for more online workshops.', 'Pending');
+
+-- Test queries
+SELECT * FROM users;
+SELECT * FROM complaints;
+
+--End of script
 //------------------------------------------------------------//
