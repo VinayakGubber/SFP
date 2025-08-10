@@ -11,8 +11,8 @@ app.use(express.json());
 
 const pool = mysql.createPool({
   host: "localhost", //RDS End point
-  user: "admin",
-  password: "admin7088",
+  user: "root",
+  password: "70887088",
   database: "StudentFeedback",
 });
 
@@ -174,5 +174,13 @@ app.get("/admin/complaints/stats", async (req, res) => {
 app.use("/s3", s3Routes);
 
 app.listen(3000, () => {
+  console.log(
+    "//------------------------------------------------------------//"
+  );
+  console.log("");
   console.log("Server running at http://<EC2 Instance IP>:3000");
+  console.log("");
+  console.log(
+    "//------------------------------------------------------------//"
+  );
 });

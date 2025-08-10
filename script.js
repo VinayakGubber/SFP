@@ -1,11 +1,15 @@
-//To replace all the IP's together use the following commmand
-
+//To replace all the IP's together use the following command
 /*
 
-sed -i 's/<EC2 Instance IP>/<Your actual EC2 instance ip>/g'  script.js
-
+sed -i 's|13.232.173.62|<Your actual EC2 instance ip>|g' script.js
 
 */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+const BASE_URL = "http://< EC2 Instance IP >:3000"; // Edit only this
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 document.addEventListener("DOMContentLoaded", () => {
   const isStudentPage = document.getElementById("studentLoginView") !== null;
@@ -28,7 +32,7 @@ studentLoginForm.addEventListener("submit", async (e) => {
     return alert("Enter both roll number and password");
 
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/login", {
+    const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rollNumber, password }),
@@ -37,10 +41,8 @@ studentLoginForm.addEventListener("submit", async (e) => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
-    // Save user to localStorage
     localStorage.setItem("student", JSON.stringify(data));
 
-    // Populate read-only fields
     setTimeout(() => {
       document.getElementById("name").value = data.name || "";
       document.getElementById("rollNo").value = data.roll_number;
@@ -48,18 +50,15 @@ studentLoginForm.addEventListener("submit", async (e) => {
       document.getElementById("mobile").value = data.mobile || "";
     }, 0);
 
-    // Switch to complaint view
     document.getElementById("studentLoginView").style.display = "none";
     document.getElementById("studentComplaintView").style.display = "block";
 
-    // ✅ Load previous complaints immediately after login
     loadStudentComplaints(data.roll_number);
   } catch (err) {
     alert(err.message);
   }
 });
 
-// Function to Store Complaints
 const complaintForm = document.getElementById("complaintForm");
 
 complaintForm.addEventListener("submit", async (e) => {
@@ -77,7 +76,7 @@ complaintForm.addEventListener("submit", async (e) => {
   };
 
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/complaints", {
+    const res = await fetch(`${BASE_URL}/complaints`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(complaint),
@@ -88,22 +87,19 @@ complaintForm.addEventListener("submit", async (e) => {
 
     alert("Complaint submitted successfully.");
     complaintForm.reset();
-    loadStudentComplaints(complaint.roll_no); // Refresh the list
+    loadStudentComplaints(complaint.roll_no);
   } catch (err) {
     console.error("Submit error:", err);
     alert("Error submitting complaint: " + err.message);
   }
 });
 
-//Function to Fetch Posted Complaints (SELF)
 async function loadStudentComplaints(rollNumber) {
   const tbody = document.querySelector("#studentComplaintsTable tbody");
   tbody.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
 
   try {
-    const res = await fetch(
-      `http://<EC2 Instance IP>:3000/complaints/${rollNumber}`
-    );
+    const res = await fetch(`${BASE_URL}/complaints/${rollNumber}`);
     const data = await res.json();
 
     tbody.innerHTML = "";
@@ -210,12 +206,11 @@ async function renderAdminComplaints() {
   tbody.innerHTML = "<tr><td colspan='8'>Loading...</td></tr>";
 
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/admin/complaints");
+    const res = await fetch(`${BASE_URL}/admin/complaints`);
     const all = await res.json();
 
     let list = all;
 
-    // Apply filters
     if (cat !== "All") list = list.filter((c) => c.category === cat);
     if (status !== "All") list = list.filter((c) => c.status === status);
     if (search) {
@@ -228,7 +223,6 @@ async function renderAdminComplaints() {
       );
     }
 
-    // Render table
     tbody.innerHTML = "";
     if (list.length === 0) {
       tbody.innerHTML =
@@ -273,19 +267,15 @@ async function renderAdminComplaints() {
 
 async function updateComplaintStatus(id, status) {
   try {
-    const res = await fetch(
-      `http://<EC2 Instance IP>:3000/admin/complaints/${id}/status`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      }
-    );
+    const res = await fetch(`${BASE_URL}/admin/complaints/${id}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
-    // Refresh complaints list
     renderAdminComplaints();
   } catch (err) {
     console.error("Failed to update complaint status:", err);
@@ -297,12 +287,9 @@ async function deleteComplaint(id) {
   if (!confirm("Are you sure you want to delete this complaint?")) return;
 
   try {
-    const res = await fetch(
-      `http://<EC2 Instance IP>:3000/admin/complaints/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const res = await fetch(`${BASE_URL}/admin/complaints/${id}`, {
+      method: "DELETE",
+    });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
@@ -317,7 +304,7 @@ async function deleteComplaint(id) {
 
 async function updateTotalComplaintCount() {
   try {
-    const res = await fetch("http://<EC2 Instance IP>:3000/admin/complaints/stats");
+    const res = await fetch(`${BASE_URL}/admin/complaints/stats`);
     const data = await res.json();
 
     document.getElementById("totalCount").textContent = data.total || 0;
@@ -331,7 +318,6 @@ async function updateTotalComplaintCount() {
 }
 
 // CSV file export
-
 async function exportToCSV() {
   const table = document.getElementById("complaintsTable");
   const rows = Array.from(table.querySelectorAll("tr"));
@@ -340,19 +326,17 @@ async function exportToCSV() {
     .map((row) => {
       const cells = Array.from(row.querySelectorAll("th, td"));
       return cells
-        .slice(0, -1) // adjust if needed: excludes 'Actions' col
+        .slice(0, -1)
         .map((cell) => `"${cell.innerText.trim()}"`)
         .join(",");
     })
     .join("\n");
 
   try {
-    // Get pre-signed S3 upload URL from backend
-    const res = await fetch("http://<EC2 Instance IP>:3000/s3/generate-upload-url");
+    const res = await fetch(`${BASE_URL}/s3/generate-upload-url`);
     if (!res.ok) throw new Error("Failed to get upload URL");
     const { uploadUrl, fileName } = await res.json();
 
-    // Upload CSV blob to S3
     const putRes = await fetch(uploadUrl, {
       method: "PUT",
       headers: { "Content-Type": "text/csv" },
@@ -365,4 +349,3 @@ async function exportToCSV() {
     alert("Error uploading CSV: " + err.message);
   }
 }
-
