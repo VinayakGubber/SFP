@@ -1,14 +1,3 @@
-Got it — I’ll make your **final GitHub-ready README.md** so that:
-
-* The architecture diagram actually displays in GitHub (we’ll use a relative or raw GitHub URL, not a `C:/...` local path).
-* The video link is clickable with a placeholder text.
-* Formatting is clean for Markdown rendering.
-
-Here’s the **final version**:
-
----
-
-````markdown
 # Student Feedback Portal – AWS Hosted Web Application
 
 ## Purpose and Intent
@@ -378,14 +367,4 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
 
 **Disclaimer:** Built for educational purposes to demonstrate AWS hosting concepts — functionality is secondary to architecture.
 
-```
-
----
-
-This version will:  
-- Display your architecture diagram from the repo (make sure `SFP_AWS_Architecture_Diagram.png` is in the same folder as `README.md`).  
-- Show a clickable video link.  
-- Be fully GitHub Markdown-friendly.  
-
-Do you want me to also **embed a raw GitHub URL** for the image so it works even outside the repo? That would make it viewable in places like npm and external docs.
 ```
