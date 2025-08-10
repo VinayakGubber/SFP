@@ -29,6 +29,7 @@ cd /var/www/html
 cd SFP
 npm install
 npm install aws-sdk
+node server.js
 
 */
 
