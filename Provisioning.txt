@@ -3,6 +3,8 @@
 sudo lsof -i :<port_number>
 sudo kill -9 <PID>
 
+//------------------------------------------------------------//
+
 Changes to be made in the following files 
 
 -(In the EC2 instance)
