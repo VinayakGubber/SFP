@@ -3,33 +3,6 @@ const AWS = require("aws-sdk");
 const express = require("express");
 const router = express.Router();
 
-//Policy for s3 bucket
-/*
-
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET",
-            "PUT",
-            "POST",
-            "DELETE",
-            "HEAD"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": [
-            "ETag"
-        ],
-        "MaxAgeSeconds": 3000
-    }
-]
-
-
-*/
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 // Replace with your actual AWS credentials and bucket
