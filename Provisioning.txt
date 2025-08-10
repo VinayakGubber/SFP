@@ -35,7 +35,24 @@ npm install aws-sdk
 //------------------------------------------------------------//
 
 //------------------------------------------------------------//
-//S3 Bucket Policy
+
+//S3 Bucket Policy (Before implementing IAM)
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Statement1",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:*",
+      "Resource": "< S3 Bucket arn >/*"
+    }
+  ]
+}
+
+
+//S3 Bucket Policy (After implementing IAM)
 
 
 {
