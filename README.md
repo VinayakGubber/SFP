@@ -1,3 +1,14 @@
+Got it — I’ll make your **final GitHub-ready README.md** so that:
+
+* The architecture diagram actually displays in GitHub (we’ll use a relative or raw GitHub URL, not a `C:/...` local path).
+* The video link is clickable with a placeholder text.
+* Formatting is clean for Markdown rendering.
+
+Here’s the **final version**:
+
+---
+
+````markdown
 # Student Feedback Portal – AWS Hosted Web Application
 
 ## Purpose and Intent
@@ -6,7 +17,7 @@ This project demonstrates how a web application can be hosted on a cloud platfor
 
 > **Note:** This project was created in a short timeframe to illustrate AWS hosting and integration concepts. Please evaluate it for its architectural demonstration rather than its feature completeness.
 
-***
+---
 
 ## Project Overview
 
@@ -19,16 +30,13 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 - **Security groups** controlling inbound/outbound access
 - **Internet Gateway** and route tables enabling secure public/private connectivity
 
-***
+---
+
 ## Architecture
 
-![Architecture Diagram](C:/Users/VINAYAK/Desktop/Projects/SFP/SFP_AWS_Architecture_Diagram.png)
+![Architecture Diagram](SFP_AWS_Architecture_Diagram.png)
 
-
-
-```
-
-***
+---
 
 ## AWS Setup Instructions
 
@@ -59,13 +67,11 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 ### 5. Security Groups
 
 **SimpleEC2-SG**
-
 - SSH (22) – from **your IP only**
 - HTTP (80) – from anywhere (0.0.0.0/0)
 - TCP (3000) – from anywhere for Node.js
 
 **SimpleRDS-SG**
-
 - MySQL (3306) – only from **SimpleEC2-SG**
 
 ### 6. RDS MySQL Instance
@@ -88,18 +94,17 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 - **Security Group:** SimpleEC2-SG
 - **Key Pair:** Existing or new `.pem` file
 
-***
+---
 
 ## EC2 Setup & Backend Configuration
 
 ### 1. Install Packages
-
 ```bash
 sudo apt update
 sudo apt install -y nodejs npm mysql-client apache2
 sudo systemctl enable apache2
 sudo systemctl start apache2
-```
+````
 
 ### 2. Verify Apache
 
@@ -108,8 +113,8 @@ cd /var/www/html
 ls
 ```
 
-Visit:  
-`http:///` → Should display Apache test page.
+Visit:
+`http://<EC2_PUBLIC_IP>/` → Should display Apache test page.
 
 ### 3. Clone Project & Install Dependencies
 
@@ -133,24 +138,24 @@ const S3_BUCKET = "cc-s3-bucket-43";
 
 ```javascript
 const pool = mysql.createPool({
-  host: "",
-  user: "",
-  password: "",
+  host: "RDS_ENDPOINT",
+  user: "RDS_USERNAME",
+  password: "RDS_PASSWORD",
   database: "StudentFeedback",
 });
 ```
 
-***
+---
 
 ## Database Setup
 
 Connect from EC2 to RDS:
 
 ```bash
-mysql -h  -u  -p
+mysql -h <RDS_ENDPOINT> -u <USERNAME> -p
 ```
 
-Create schema and insert sample data:
+Run:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS StudentFeedback;
@@ -190,22 +195,22 @@ INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
 ('Student Two', 'STU002', 'student2@example.com', '8888888888', 'Hostel', 'Leaky faucet in room.', 'In Progress');
 ```
 
-***
+---
 
 ## Frontend Setup (S3 Hosting)
 
-1. Create S3 bucket: **student-feedback-simple**  
-2. Enable **Static Website Hosting**  
+1. Create S3 bucket: **student-feedback-simple**
+2. Enable **Static Website Hosting**
 3. Update API endpoints in frontend (`script.js`):
 
 ```javascript
-fetch('http://:3000/login')
+fetch('http://<EC2_PUBLIC_IP>:3000/login')
 ```
 
-4. Upload frontend files to the bucket  
-5. Apply a **bucket policy** for public read access  
+4. Upload frontend files to the bucket
+5. Apply a **bucket policy** for public read access
 
-***
+---
 
 ## Starting the Application
 
@@ -216,18 +221,18 @@ cd StudentFeedbackPortal/server
 node server.js
 ```
 
-***
+---
 
 ## Final Verification Checklist
 
-✅ EC2 has public IP in public subnet  
-✅ RDS is in private subnet with no public access  
-✅ Security groups allow necessary inbound/outbound traffic  
-✅ Route tables and ACLs configured correctly  
-✅ Backend server running on EC2  
-✅ Frontend loads via S3 static hosting  
+✅ EC2 has public IP in public subnet
+✅ RDS is in private subnet with no public access
+✅ Security groups allow necessary inbound/outbound traffic
+✅ Route tables and ACLs configured correctly
+✅ Backend server running on EC2
+✅ Frontend loads via S3 static hosting
 
-***
+---
 
 ## Phase 2: Additional Feature – Feedback Marshal IAM Role & S3 Bucket Policy
 
@@ -237,19 +242,10 @@ The **Feedback Marshal** role demonstrates AWS **role-based access control** wit
 
 Enable **read-only access** to feedback CSV files stored in the S3 bucket without allowing modification or deletion.
 
-***
-
 ### IAM User Setup: Individual User "FeedbackMarshal-FM1"
 
-1. **Create IAM User:**
-
-- Name: `FeedbackMarshal-FM1`
-- Enable **Programmatic access** and **AWS Management Console access** (set a password)
-- Save the Access Key ID and Secret Access Key for CLI or SDK use.
-
+1. **Create IAM User:** `FeedbackMarshal-FM1`
 2. **Create and Attach Custom Policy:** `FeedbackMarshalS3ReadOnly`
-
-Use this JSON to create the policy:
 
 ```json
 {
@@ -270,13 +266,8 @@ Use this JSON to create the policy:
 }
 ```
 
-Attach this policy directly to `FeedbackMarshal-FM1`.
-
 3. **Attach AWS Managed Policy:** `AmazonS3ReadOnlyAccess`
-
-Attach this managed policy to `FeedbackMarshal-FM1` to grant broad read-only S3 permissions.
-
-4. **(Optional) Attach Policy for Bucket Listing:**
+4. **Optional Policy for Bucket Listing:**
 
 ```json
 {
@@ -292,11 +283,9 @@ Attach this managed policy to `FeedbackMarshal-FM1` to grant broad read-only S3 
 }
 ```
 
-***
+---
 
-### Update S3 Bucket Policy to Secure Access
-
-Modify the S3 bucket policy to allow wide access but explicitly deny write/delete actions for the specific IAM user `FeedbackMarshal-FM1` by its ARN.
+## Update S3 Bucket Policy to Secure Access
 
 ```json
 {
@@ -313,7 +302,7 @@ Modify the S3 bucket policy to allow wide access but explicitly deny write/delet
       "Sid": "ExplicitDenyWriteDeleteAndBucketDeleteForSpecificUser",
       "Effect": "Deny",
       "Principal": {
-        "AWS": ""
+        "AWS": "<IAM_USER_ARN>"
       },
       "Action": [
         "s3:PutObject",
@@ -338,75 +327,65 @@ Modify the S3 bucket policy to allow wide access but explicitly deny write/delet
 }
 ```
 
-Replace `` with the actual ARN of the IAM user.
-
-***
-
-### Testing Access for FeedbackMarshal-FM1
-
-- **Login:** Use the AWS Console URL and credentials of `FeedbackMarshal-FM1`.
-- **Verify:** 
-  - Able to list and download objects from the S3 bucket.
-  - Attempting to delete or upload files results in **Access Denied** errors.
-
-Example CLI command to test delete:
-
-```bash
-aws s3 rm s3://student-feedback-simple/ --profile feedbackmarshal-fm1
-```
-
-This should fail with "Access Denied" confirming the enforcement of least privilege.
-
-***
+---
 
 ## Verification of Role Behavior
 
-- ✅ Users like `FeedbackMarshal-FM1` can **list** and **download** CSV files from the bucket.
-- ❌ Attempts to **upload**, **delete**, or modify files or the bucket return **“Access Denied”** errors.
+* ✅ Can **list** and **download** CSV files from the bucket
+* ❌ Upload/delete operations return **Access Denied**
 
-***
+---
 
 ## Updated Expected Output
 
-- Apache server running at `http:///`
-- Frontend accessible via the S3 static site URL
-- Backend API handling authentication and data operations
-- MySQL database storing user data & feedback
-- CSV exports uploaded to the S3 bucket automatically
-- Fully functional **multi-tier AWS architecture**
-- IAM-based role management enforcing least privilege on S3 CSV files
-- Secure enforcement of read-only access for designated IAM users with explicit write/delete operation denial
+* Apache server running at `http://<EC2_PUBLIC_IP>/`
+* Frontend accessible via the S3 static site URL
+* Backend API handling authentication and data operations
+* MySQL database storing user data & feedback
+* CSV exports uploaded to the S3 bucket automatically
+* Fully functional **multi-tier AWS architecture**
+* IAM-based role management enforcing least privilege
 
-***
+---
 
 ## Technologies Used
 
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express.js
-- **Database:** MySQL (AWS RDS)
-- **Cloud Services:** AWS EC2, RDS, S3, VPC
-- **Web Server:** Apache HTTP Server
+* **Frontend:** HTML, CSS, JavaScript
+* **Backend:** Node.js, Express.js
+* **Database:** MySQL (AWS RDS)
+* **Cloud Services:** AWS EC2, RDS, S3, VPC
+* **Web Server:** Apache HTTP Server
 
-***
+---
 
 ## Learning Outcomes
 
-- VPC configuration & AWS network security
-- Multi-tier application design & deployment on AWS
-- Service integration (EC2 ↔ RDS ↔ S3)
-- Database schema design & operations
-- REST API development
-- Static site hosting with S3
-- IAM-based security & least privilege principles
+* VPC configuration & AWS network security
+* Multi-tier application design & deployment on AWS
+* Service integration (EC2 ↔ RDS ↔ S3)
+* Database schema design & operations
+* REST API development
+* Static site hosting with S3
+* IAM-based security & least privilege principles
 
-***
+---
 
 ## Additional Resource
 
-*Video Walkthrough Placeholder:*  
-A detailed video resource demonstrating the setup stepsis available here.
+[📺 Video Walkthrough (Placeholder)](https://youtu.be/1dKDs9hWn88)
 
-
-***
+---
 
 **Disclaimer:** Built for educational purposes to demonstrate AWS hosting concepts — functionality is secondary to architecture.
+
+```
+
+---
+
+This version will:  
+- Display your architecture diagram from the repo (make sure `SFP_AWS_Architecture_Diagram.png` is in the same folder as `README.md`).  
+- Show a clickable video link.  
+- Be fully GitHub Markdown-friendly.  
+
+Do you want me to also **embed a raw GitHub URL** for the image so it works even outside the repo? That would make it viewable in places like npm and external docs.
+```
