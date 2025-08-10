@@ -366,5 +366,3 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
 ---
 
 **Disclaimer:** Built for educational purposes to demonstrate AWS hosting concepts — functionality is secondary to architecture.
-
-```
