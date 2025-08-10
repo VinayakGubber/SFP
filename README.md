@@ -6,91 +6,87 @@ This project demonstrates how a web application can be hosted on a cloud platfor
 
 > **Note:** This project was created in a short timeframe to illustrate AWS hosting and integration concepts. Please evaluate it for its architectural demonstration rather than its feature completeness.
 
----
+***
 
 ## Project Overview
 
 The **Student Feedback Portal** is a multi-tier web application hosted entirely on AWS. Its architecture includes:
 
-* **Custom VPC** with public and private subnets for resource segregation
-* **RDS MySQL instance** in private subnets with restricted access
-* **EC2 Ubuntu instance** running Apache, Node.js backend, and MySQL client
-* **S3 bucket** hosting static frontend files and storing exported CSV reports
-* **Security groups** controlling inbound/outbound access
-* **Internet Gateway** and route tables enabling secure public/private connectivity
+- **Custom VPC** with public and private subnets for resource segregation
+- **RDS MySQL instance** in private subnets with restricted access
+- **EC2 Ubuntu instance** running Apache, Node.js backend, and MySQL client
+- **S3 bucket** hosting static frontend files and storing exported CSV reports
+- **Security groups** controlling inbound/outbound access
+- **Internet Gateway** and route tables enabling secure public/private connectivity
 
----
-
+***
 ## Architecture
 
-```
-Internet → Internet Gateway → Public Subnet (EC2) → Private Subnet (RDS)
-                ↓
-            S3 Bucket (Static Frontend + CSV Storage)
+![Architecture Diagram](https://drive.google.com/file/d/19bJHSPTgHCEWZZ58-RruzYs6MXK6Ikw1/view?usp=sharing)
+
 ```
 
----
+***
 
 ## AWS Setup Instructions
 
 ### 1. Create Custom VPC
 
-* **Name:** `SimpleFeedbackVPC`
-* **CIDR Block:** `10.0.0.0/16`
-* **Tenancy:** Default
+- **Name:** `SimpleFeedbackVPC`
+- **CIDR Block:** `10.0.0.0/16`
+- **Tenancy:** Default
 
 ### 2. Create Subnets
 
-* **PublicSubnet1:** `10.0.1.0/24` – for EC2
-* **PrivateSubnet1:** `10.0.2.0/24` – for RDS
-* **PrivateSubnet2:** `10.0.3.0/24` – reserved/optional
-* **Availability Zone:** `ap-south-1a`
+- **PublicSubnet1:** `10.0.1.0/24` – for EC2
+- **PrivateSubnet1:** `10.0.2.0/24` – for RDS
+- **PrivateSubnet2:** `10.0.3.0/24` – reserved/optional
+- **Availability Zone:** `ap-south-1a`
 
 ### 3. Internet Gateway
 
-* **Name:** `SimpleIGW`
-* Attach to **SimpleFeedbackVPC**
+- **Name:** `SimpleIGW`
+- Attach to **SimpleFeedbackVPC**
 
 ### 4. Route Tables
 
-* **Public Route Table:** Route `0.0.0.0/0` → SimpleIGW
-
-  * Associate with **PublicSubnet1**
-* **Private Route Table:** For **PrivateSubnet1** and **PrivateSubnet2** (no IGW route)
+- **Public Route Table:** Route `0.0.0.0/0` → SimpleIGW  
+  Associate with **PublicSubnet1**
+- **Private Route Table:** For **PrivateSubnet1** and **PrivateSubnet2** (no IGW route)
 
 ### 5. Security Groups
 
 **SimpleEC2-SG**
 
-* SSH (22) – from **your IP only**
-* HTTP (80) – from anywhere (0.0.0.0/0)
-* TCP (3000) – from anywhere for Node.js
+- SSH (22) – from **your IP only**
+- HTTP (80) – from anywhere (0.0.0.0/0)
+- TCP (3000) – from anywhere for Node.js
 
 **SimpleRDS-SG**
 
-* MySQL (3306) – only from **SimpleEC2-SG**
+- MySQL (3306) – only from **SimpleEC2-SG**
 
 ### 6. RDS MySQL Instance
 
-* **Engine:** MySQL
-* **Identifier:** `studentfeedback-db`
-* **Master credentials:** Your choice
-* **Instance size:** `db.t3.micro` (Free Tier)
-* **Storage:** 20GB SSD (GP2)
-* **Subnet:** PrivateSubnet1 (+ optionally PrivateSubnet2)
-* **Public Access:** Disabled
-* **Security Group:** SimpleRDS-SG
+- **Engine:** MySQL
+- **Identifier:** `studentfeedback-db`
+- **Master credentials:** Your choice
+- **Instance size:** `db.t3.micro` (Free Tier)
+- **Storage:** 20GB SSD (GP2)
+- **Subnet:** PrivateSubnet1 (+ optionally PrivateSubnet2)
+- **Public Access:** Disabled
+- **Security Group:** SimpleRDS-SG
 
 ### 7. EC2 Instance
 
-* **AMI:** Ubuntu 22.04 LTS
-* **Type:** `t2.micro` (Free Tier)
-* **Network:** SimpleFeedbackVPC → PublicSubnet1
-* **Public IP:** Enabled
-* **Security Group:** SimpleEC2-SG
-* **Key Pair:** Existing or new `.pem` file
+- **AMI:** Ubuntu 22.04 LTS
+- **Type:** `t2.micro` (Free Tier)
+- **Network:** SimpleFeedbackVPC → PublicSubnet1
+- **Public IP:** Enabled
+- **Security Group:** SimpleEC2-SG
+- **Key Pair:** Existing or new `.pem` file
 
----
+***
 
 ## EC2 Setup & Backend Configuration
 
@@ -110,8 +106,8 @@ cd /var/www/html
 ls
 ```
 
-Visit:
-`http://<EC2-Public-IP>/` → Should display Apache test page.
+Visit:  
+`http:///` → Should display Apache test page.
 
 ### 3. Clone Project & Install Dependencies
 
@@ -135,21 +131,21 @@ const S3_BUCKET = "cc-s3-bucket-43";
 
 ```javascript
 const pool = mysql.createPool({
-  host: "<RDS-endpoint>",
-  user: "<DB-username>",
-  password: "<DB-password>",
+  host: "",
+  user: "",
+  password: "",
   database: "StudentFeedback",
 });
 ```
 
----
+***
 
 ## Database Setup
 
 Connect from EC2 to RDS:
 
 ```bash
-mysql -h <RDS-endpoint> -u <username> -p
+mysql -h  -u  -p
 ```
 
 Create schema and insert sample data:
@@ -192,22 +188,22 @@ INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
 ('Student Two', 'STU002', 'student2@example.com', '8888888888', 'Hostel', 'Leaky faucet in room.', 'In Progress');
 ```
 
----
+***
 
 ## Frontend Setup (S3 Hosting)
 
-1. Create S3 bucket: **student-feedback-simple**
-2. Enable **Static Website Hosting**
+1. Create S3 bucket: **student-feedback-simple**  
+2. Enable **Static Website Hosting**  
 3. Update API endpoints in frontend (`script.js`):
 
 ```javascript
-fetch('http://<EC2-Public-IP>:3000/login')
+fetch('http://:3000/login')
 ```
 
-4. Upload frontend files to the bucket
-5. Apply a **bucket policy** for public read access
+4. Upload frontend files to the bucket  
+5. Apply a **bucket policy** for public read access  
 
----
+***
 
 ## Starting the Application
 
@@ -218,27 +214,40 @@ cd StudentFeedbackPortal/server
 node server.js
 ```
 
----
+***
 
 ## Final Verification Checklist
 
-✅ EC2 has public IP in public subnet
-✅ RDS is in private subnet with no public access
-✅ Security groups allow necessary inbound/outbound traffic
-✅ Route tables and ACLs configured correctly
-✅ Backend server running on EC2
-✅ Frontend loads via S3 static hosting
+✅ EC2 has public IP in public subnet  
+✅ RDS is in private subnet with no public access  
+✅ Security groups allow necessary inbound/outbound traffic  
+✅ Route tables and ACLs configured correctly  
+✅ Backend server running on EC2  
+✅ Frontend loads via S3 static hosting  
 
----
+***
 
-## Additional Feature – Feedback Marshal IAM Role & S3 Bucket Policy
+## Phase 2: Additional Feature – Feedback Marshal IAM Role & S3 Bucket Policy
 
 The **Feedback Marshal** role demonstrates AWS **role-based access control** with **least privilege** principles.
 
-**Role Purpose:**
-Read-only access to feedback CSV files stored in the S3 bucket, without the ability to modify or delete.
+### Purpose
 
-**Policy:**
+Enable **read-only access** to feedback CSV files stored in the S3 bucket without allowing modification or deletion.
+
+***
+
+### IAM User Setup: Individual User "FeedbackMarshal-FM1"
+
+1. **Create IAM User:**
+
+- Name: `FeedbackMarshal-FM1`
+- Enable **Programmatic access** and **AWS Management Console access** (set a password)
+- Save the Access Key ID and Secret Access Key for CLI or SDK use.
+
+2. **Create and Attach Custom Policy:** `FeedbackMarshalS3ReadOnly`
+
+Use this JSON to create the policy:
 
 ```json
 {
@@ -259,52 +268,143 @@ Read-only access to feedback CSV files stored in the S3 bucket, without the abil
 }
 ```
 
-**Implementation Steps:**
+Attach this policy directly to `FeedbackMarshal-FM1`.
 
-1. Create IAM group **FeedbackMarshal**
-2. Attach policy above to the group
-3. Add IAM users to the group
-4. Ensure bucket permissions align with this policy
-5. Demonstrate read-only behavior:
+3. **Attach AWS Managed Policy:** `AmazonS3ReadOnlyAccess`
 
-   * ✅ List & download files
-   * ❌ Upload/delete attempts return “Access Denied”
+Attach this managed policy to `FeedbackMarshal-FM1` to grant broad read-only S3 permissions.
 
----
+4. **(Optional) Attach Policy for Bucket Listing:**
 
-## Expected Output
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Sid": "AllowListAllBuckets",
+          "Effect": "Allow",
+          "Action": "s3:ListAllMyBuckets",
+          "Resource": "arn:aws:s3:::*"
+      }
+  ]
+}
+```
 
-* Apache server running at `http://<EC2-public-IP>/`
-* Frontend accessible via S3 static site URL
-* Backend API handling auth & data operations
-* MySQL database storing user data & feedback
-* CSV exports uploaded to S3 bucket automatically
-* Fully functional **multi-tier AWS architecture**
+***
 
----
+### Update S3 Bucket Policy to Secure Access
+
+Modify the S3 bucket policy to allow wide access but explicitly deny write/delete actions for the specific IAM user `FeedbackMarshal-FM1` by its ARN.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Statement1",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:*",
+      "Resource": "arn:aws:s3:::student-feedback-simple/*"
+    },
+    {
+      "Sid": "ExplicitDenyWriteDeleteAndBucketDeleteForSpecificUser",
+      "Effect": "Deny",
+      "Principal": {
+        "AWS": ""
+      },
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:DeleteObject",
+        "s3:DeleteObjectVersion",
+        "s3:AbortMultipartUpload",
+        "s3:RestoreObject",
+        "s3:ReplicateObject",
+        "s3:ReplicateDelete",
+        "s3:ReplicateTags",
+        "s3:PutObjectTagging",
+        "s3:DeleteObjectTagging",
+        "s3:DeleteBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::student-feedback-simple",
+        "arn:aws:s3:::student-feedback-simple/*"
+      ]
+    }
+  ]
+}
+```
+
+Replace `` with the actual ARN of the IAM user.
+
+***
+
+### Testing Access for FeedbackMarshal-FM1
+
+- **Login:** Use the AWS Console URL and credentials of `FeedbackMarshal-FM1`.
+- **Verify:** 
+  - Able to list and download objects from the S3 bucket.
+  - Attempting to delete or upload files results in **Access Denied** errors.
+
+Example CLI command to test delete:
+
+```bash
+aws s3 rm s3://student-feedback-simple/ --profile feedbackmarshal-fm1
+```
+
+This should fail with "Access Denied" confirming the enforcement of least privilege.
+
+***
+
+## Verification of Role Behavior
+
+- ✅ Users like `FeedbackMarshal-FM1` can **list** and **download** CSV files from the bucket.
+- ❌ Attempts to **upload**, **delete**, or modify files or the bucket return **“Access Denied”** errors.
+
+***
+
+## Updated Expected Output
+
+- Apache server running at `http:///`
+- Frontend accessible via the S3 static site URL
+- Backend API handling authentication and data operations
+- MySQL database storing user data & feedback
+- CSV exports uploaded to the S3 bucket automatically
+- Fully functional **multi-tier AWS architecture**
+- IAM-based role management enforcing least privilege on S3 CSV files
+- Secure enforcement of read-only access for designated IAM users with explicit write/delete operation denial
+
+***
 
 ## Technologies Used
 
-* **Frontend:** HTML, CSS, JavaScript
-* **Backend:** Node.js, Express.js
-* **Database:** MySQL (AWS RDS)
-* **Cloud Services:** AWS EC2, RDS, S3, VPC
-* **Web Server:** Apache HTTP Server
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Node.js, Express.js
+- **Database:** MySQL (AWS RDS)
+- **Cloud Services:** AWS EC2, RDS, S3, VPC
+- **Web Server:** Apache HTTP Server
 
----
+***
 
 ## Learning Outcomes
 
-* VPC configuration & AWS network security
-* Multi-tier application design & deployment on AWS
-* Service integration (EC2 ↔ RDS ↔ S3)
-* Database schema design & operations
-* REST API development
-* Static site hosting with S3
-* IAM-based security & least privilege principles
+- VPC configuration & AWS network security
+- Multi-tier application design & deployment on AWS
+- Service integration (EC2 ↔ RDS ↔ S3)
+- Database schema design & operations
+- REST API development
+- Static site hosting with S3
+- IAM-based security & least privilege principles
 
----
+***
+
+## Additional Resource
+
+*Video Walkthrough Placeholder:*  
+A detailed video resource demonstrating the setup stepsis available here.
+
+
+***
 
 **Disclaimer:** Built for educational purposes to demonstrate AWS hosting concepts — functionality is secondary to architecture.
-
----
