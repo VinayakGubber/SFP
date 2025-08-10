@@ -214,12 +214,13 @@ node server.js
 
 ## Final Verification Checklist
 
-✅ EC2 has public IP in public subnet
-✅ RDS is in private subnet with no public access
-✅ Security groups allow necessary inbound/outbound traffic
-✅ Route tables and ACLs configured correctly
-✅ Backend server running on EC2
-✅ Frontend loads via S3 static hosting
+- ✅ EC2 has public IP in public subnet  
+- ✅ RDS is in private subnet with no public access  
+- ✅ Security groups allow necessary inbound/outbound traffic  
+- ✅ Route tables and ACLs configured correctly  
+- ✅ Backend server running on EC2  
+- ✅ Frontend loads via S3 static hosting
+
 
 ---
 
@@ -325,7 +326,7 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
 
 ---
 
-## Updated Expected Output
+## Expected Output
 
 * Apache server running at `http://<EC2_PUBLIC_IP>/`
 * Frontend accessible via the S3 static site URL
