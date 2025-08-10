@@ -21,8 +21,9 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 
 ***
 ## Architecture
+<h2>Architecture</h2>
+<img src="https://path-to-your-image.png" alt="Architecture Diagram" style="max-width:100%; height:auto;">
 
-![Architecture Diagram]("C:\Users\VINAYAK\Desktop\Projects\SFP\SFP_AWS_Architecture_Diagram.png")
 
 ```
 
