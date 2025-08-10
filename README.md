@@ -361,7 +361,7 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
 
 ## Additional Resource
 
-[📺 Video Walkthrough (Placeholder)](https://youtu.be/1dKDs9hWn88)
+[📺 Video Walkthrough](https://youtu.be/1dKDs9hWn88)
 
 ---
 
