@@ -36,6 +36,8 @@ npm install aws-sdk
 
 //------------------------------------------------------------//
 
+// BEFORE IMPLEMENTING IAM
+
 //S3 Bucket Policy (Before implementing IAM)
 
 {
@@ -51,8 +53,38 @@ npm install aws-sdk
   ]
 }
 
+//------------------------------------------------------------//
+//S3 CORS policy
 
-//S3 Bucket Policy (After implementing IAM)
+
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [
+            "ETag"
+        ],
+        "MaxAgeSeconds": 3000
+    }
+]
+
+
+//------------------------------------------------------------//
+
+// AFTER IMPLEMENTING IAM
+
+//S3 Bucket Policy 
 
 
 {
@@ -93,37 +125,6 @@ npm install aws-sdk
   ]
 }
 
-
-//------------------------------------------------------------//
-
-//------------------------------------------------------------//
-//S3 CORS policy
-
-
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET",
-            "PUT",
-            "POST",
-            "DELETE",
-            "HEAD"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": [
-            "ETag"
-        ],
-        "MaxAgeSeconds": 3000
-    }
-]
-
-
-//------------------------------------------------------------//
 
 //------------------------------------------------------------//
 
