@@ -18,7 +18,7 @@ Changes to be made in the following files
 //For EC2 Instance
 /*
 
-do apt update
+sudo apt update
 sudo apt install nodejs npm -y
 sudo apt install mysql-client -y
 sudo apt install apache2 -y
