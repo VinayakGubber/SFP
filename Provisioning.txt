@@ -131,7 +131,7 @@ node server.js
 
 /* To be attached to the user*/
 
-//Policy for listing buckets------1
+//Policy for listing buckets  ------  1
 
 
 {
@@ -148,7 +148,7 @@ node server.js
 
 
 
-//Policy for listing buckets------2
+//Policy for listing buckets  ------  2
 
 AWS managed policy 
 AmazonS3ReadOnlyAccess
