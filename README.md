@@ -23,7 +23,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 
 ## Architecture
 
-![Architecture Diagram](SFP_AWS_Architecture_Diagram.png)
+![Architecture Diagram](https://raw.githubusercontent.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>/main/SFP_AWS_Architecture_Diagram.png)
 
 ---
 
@@ -361,7 +361,7 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
 
 ## Additional Resource
 
-[📺 Video Walkthrough](https://youtu.be/1dKDs9hWn88)
+[![Video Walkthrough](https://img.youtube.com/vi/1dKDs9hWn88/0.jpg)](https://youtu.be/1dKDs9hWn88)
 
 ---
 
