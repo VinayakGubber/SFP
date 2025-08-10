@@ -1,5 +1,7 @@
 # Student Feedback Portal – AWS Hosted Web Application
 
+## AWS Student Feedback Portal – Complete Multi-Tier Cloud Hosting Tutorial (EC2, RDS, S3, VPC)
+
 ## Purpose and Intent
 
 This project demonstrates how a web application can be hosted on a cloud platform like AWS by leveraging various AWS services and integrating them into a complete, working solution. It highlights key concepts in **cloud architecture**, **security**, and **application deployment**.
