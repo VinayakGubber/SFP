@@ -22,7 +22,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 ***
 ## Architecture
 
-![Architecture Diagram](https://drive.google.com/file/d/19bJHSPTgHCEWZZ58-RruzYs6MXK6Ikw1/view?usp=sharing)
+![Architecture Diagram](https://drive.google.com/drive/folders/1heQitYj4aaBqQs27gJAwSqTICY1Q3Oa2)
 
 ```
 
