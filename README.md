@@ -23,7 +23,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 
 ## Architecture
 
-![Architecture Diagram](https://raw.githubusercontent.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>/main/SFP_AWS_Architecture_Diagram.png)
+![Architecture Diagram](https://raw.githubusercontent.com/VinayakGubber/SFP/main/SFP_AWS_Architecture_Diagram.png)
 
 ---
 
