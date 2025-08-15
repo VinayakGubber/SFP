@@ -1,6 +1,6 @@
-# Student Feedback Portal – AWS Hosted Web Application
+# Student Grievance Portal – AWS Hosted Web Application
 
->AWS Student Feedback Portal – Complete Multi-Tier Cloud Hosting Using (EC2, RDS, S3, VPC)
+>AWS Student Grievance Portal – Complete Multi-Tier Cloud Hosting Using (EC2, RDS, S3, VPC)
 
 ## Purpose and Intent
 
@@ -12,7 +12,7 @@ This project demonstrates how a web application can be hosted on a cloud platfor
 
 ## Project Overview
 
-The **Student Feedback Portal** is a multi-tier web application hosted entirely on AWS. Its architecture includes:
+The **Student Grievance Portal** is a multi-tier web application hosted entirely on AWS. Its architecture includes:
 
 - **Custom VPC** with public and private subnets for resource segregation
 - **RDS MySQL instance** in private subnets with restricted access
@@ -25,7 +25,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 
 ## Architecture
 
-![Architecture Diagram](https://raw.githubusercontent.com/VinayakGubber/SFP/main/AWS_Architecture_For_SFP.png) 
+![Architecture Diagram](https://raw.githubusercontent.com/VinayakGubber/StudentGrievancePortal/main/AWS_Architecture_For_SGP.png) 
  > IGNORE the spellings its AI Generated
 ---
 
@@ -33,7 +33,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 
 ### 1. Create Custom VPC
 
-- **Name:** `SimpleFeedbackVPC`
+- **Name:** `SimpleGrievanceVPC`
 - **CIDR Block:** `10.0.0.0/16`
 - **Tenancy:** Default
 
@@ -47,7 +47,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 ### 3. Internet Gateway
 
 - **Name:** `SimpleIGW`
-- Attach to **SimpleFeedbackVPC**
+- Attach to **SimpleGrievanceVPC**
 
 ### 4. Route Tables
 
@@ -68,7 +68,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 ### 6. RDS MySQL Instance
 
 - **Engine:** MySQL
-- **Identifier:** `studentfeedback-db`
+- **Identifier:** `studentGrievance-db`
 - **Master credentials:** Your choice
 - **Instance size:** `db.t3.micro` (Free Tier)
 - **Storage:** 20GB SSD (GP2)
@@ -80,7 +80,7 @@ The **Student Feedback Portal** is a multi-tier web application hosted entirely 
 
 - **AMI:** Ubuntu 22.04 LTS
 - **Type:** `t2.micro` (Free Tier)
-- **Network:** SimpleFeedbackVPC → PublicSubnet1
+- **Network:** SimpleGrievanceVPC → PublicSubnet1
 - **Public IP:** Enabled
 - **Security Group:** SimpleEC2-SG
 - **Key Pair:** Existing or new `.pem` file
@@ -110,8 +110,8 @@ Visit:
 ### 3. Clone Project & Install Dependencies
 
 ```bash
-git clone https://github.com/your-repo/StudentFeedbackPortal.git
-cd StudentFeedbackPortal/server
+git clone https://github.com/your-repo/StudentGrievancePortal.git
+cd StudentGrievancePortal/server
 npm install
 npm install aws-sdk
 ```
@@ -132,7 +132,7 @@ const pool = mysql.createPool({
   host: "RDS_ENDPOINT",
   user: "RDS_USERNAME",
   password: "RDS_PASSWORD",
-  database: "StudentFeedback",
+  database: "StudentGrievance",
 });
 ```
 
@@ -149,8 +149,8 @@ mysql -h <RDS_ENDPOINT> -u <USERNAME> -p
 Run:
 
 ```sql
-CREATE DATABASE IF NOT EXISTS StudentFeedback;
-USE StudentFeedback;
+CREATE DATABASE IF NOT EXISTS StudentGrievance;
+USE StudentGrievance;
 
 DROP TABLE IF EXISTS complaints;
 DROP TABLE IF EXISTS users;
@@ -190,7 +190,7 @@ INSERT INTO complaints (name, roll_no, email, mobile, category, message, status)
 
 ## Frontend Setup (S3 Hosting)
 
-1. Create S3 bucket: **student-feedback-simple**
+1. Create S3 bucket: **student-Grievance-simple**
 2. Enable **Static Website Hosting**
 3. Update API endpoints in frontend (`script.js`):
 
@@ -208,7 +208,7 @@ fetch('http://<EC2_PUBLIC_IP>:3000/login')
 On EC2:
 
 ```bash
-cd StudentFeedbackPortal/server
+cd StudentGrievancePortal/server
 node server.js
 ```
 
@@ -226,18 +226,18 @@ node server.js
 
 ---
 
-## Phase 2: Additional Feature – Feedback Marshal IAM Role & S3 Bucket Policy
+## Phase 2: Additional Feature – Grievance Marshal IAM Role & S3 Bucket Policy
 
-The **Feedback Marshal** role demonstrates AWS **role-based access control** with **least privilege** principles.
+The **Grievance Marshal** role demonstrates AWS **role-based access control** with **least privilege** principles.
 
 ### Purpose
 
-Enable **read-only access** to feedback CSV files stored in the S3 bucket without allowing modification or deletion.
+Enable **read-only access** to Grievance CSV files stored in the S3 bucket without allowing modification or deletion.
 
-### IAM User Setup: Individual User "FeedbackMarshal-FM1"
+### IAM User Setup: Individual User "GrievanceMarshal-FM1"
 
-1. **Create IAM User:** `FeedbackMarshal-FM1`
-2. **Create and Attach Custom Policy:** `FeedbackMarshalS3ReadOnly`
+1. **Create IAM User:** `GrievanceMarshal-FM1`
+2. **Create and Attach Custom Policy:** `GrievanceMarshalS3ReadOnly`
 
 ```json
 {
@@ -250,8 +250,8 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
         "s3:ListBucket"
       ],
       "Resource": [
-        "arn:aws:s3:::student-feedback-simple",
-        "arn:aws:s3:::student-feedback-simple/*"
+        "arn:aws:s3:::student-Grievance-simple",
+        "arn:aws:s3:::student-Grievance-simple/*"
       ]
     }
   ]
@@ -288,7 +288,7 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": "arn:aws:s3:::student-feedback-simple/*"
+      "Resource": "arn:aws:s3:::student-Grievance-simple/*"
     },
     {
       "Sid": "ExplicitDenyWriteDeleteAndBucketDeleteForSpecificUser",
@@ -311,8 +311,8 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
         "s3:DeleteBucket"
       ],
       "Resource": [
-        "arn:aws:s3:::student-feedback-simple",
-        "arn:aws:s3:::student-feedback-simple/*"
+        "arn:aws:s3:::student-Grievance-simple",
+        "arn:aws:s3:::student-Grievance-simple/*"
       ]
     }
   ]
@@ -333,7 +333,7 @@ Enable **read-only access** to feedback CSV files stored in the S3 bucket withou
 * Apache server running at `http://<EC2_PUBLIC_IP>/`
 * Frontend accessible via the S3 static site URL
 * Backend API handling authentication and data operations
-* MySQL database storing user data & feedback
+* MySQL database storing user data & Grievance
 * CSV exports uploaded to the S3 bucket automatically
 * Fully functional **multi-tier AWS architecture**
 * IAM-based role management enforcing least privilege
